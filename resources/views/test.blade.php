@@ -19,22 +19,7 @@
             'csrfToken' => csrf_token(),
         ]) !!};
     </script>
-    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
-    <script>
 
-        // Enable pusher logging - don't include this in production
-        Pusher.logToConsole = true;
-
-        var pusher = new Pusher("680cdba93f590707a3fa", {
-            cluster: 'ap1',
-            encrypted: true
-        });
-
-        var channel = pusher.subscribe('my-channel');
-        channel.bind('my-event', function (data) {
-            alert(data.message);
-        });
-    </script>
 </head>
 <body>
 <div id="app">
@@ -62,7 +47,7 @@
                 <ul class="nav navbar-nav">
                     &nbsp;<li><a href="{{ route('chat') }}">Chat</a></li>
                     &nbsp;<li><a href="{{ route('massages') }}">Massages</a></li>
-                     <li><a href="{{ route('test') }}">Test</a></li>
+                    <li><a href="{{ route('test') }}">Test</a></li>
                 </ul>
 
                 <!-- Right Side Of Navbar -->
@@ -98,11 +83,41 @@
             </div>
         </div>
     </nav>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Chatroom
+                        <span class="badge pull-right">@{{ usersInRoom.length }}</span>
+                    </div>
 
-    @yield('content')
+                    <chat-log :messages="messages"></chat-log>
+                    <chat-composer v-on:messagesent="addMessage"></chat-composer>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Scripts -->
+<script src="https://js.pusher.com/4.1/pusher.min.js"></script>
 <script src="/js/app.js"></script>
+
+<script>
+
+    // Enable pusher logging - don't include this in production
+    Pusher.logToConsole = true;
+
+    var pusher = new Pusher("f5f8045ab09bc508496e", {
+        cluster: 'ap1',
+        encrypted: true
+    });
+
+    var channel = pusher.subscribe('my-channel');
+    channel.bind('my-event', function (data) {
+        alert(data.message);
+    });
+</script>
 </body>
 </html>

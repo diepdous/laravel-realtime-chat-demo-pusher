@@ -19,11 +19,15 @@ Route::get('/', function () {
 
 Route::get('/chat', function () {
     return view('chat');
-})->middleware('auth');
+})->name("chat")->middleware('auth');
+
+Route::get('/test', function () {
+    return view('test');
+})->name("test")->middleware('auth');
 
 Route::get('/messages', function () {
     return App\Message::with('user')->get();
-})->middleware('auth');
+})->name("massages")->middleware('auth');
 
 Route::post('/messages', function () {
     // Store the new message
