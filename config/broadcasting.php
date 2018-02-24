@@ -37,7 +37,11 @@ return [
             'app_id' => env('PUSHER_APP_ID'),
 
             'options' => [
+<<<<<<< HEAD
                 'cluster' => env('PUSHER_CLUSTER'),
+=======
+                'cluster' => env('PUSHER_CLUSTER')
+>>>>>>> 03f1065ce41467dd38c438e6cd2b3e5f9928bd5e
                 //
             ],
         ],
