@@ -19,22 +19,7 @@
             'csrfToken' => csrf_token(),
         ]) !!};
     </script>
-    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
-    <script>
 
-        // Enable pusher logging - don't include this in production
-        Pusher.logToConsole = true;
-
-        var pusher = new Pusher("680cdba93f590707a3fa", {
-            cluster: 'ap1',
-            encrypted: true
-        });
-
-        var channel = pusher.subscribe('my-channel');
-        channel.bind('my-event', function (data) {
-            alert(data.message);
-        });
-    </script>
 </head>
 <body>
 <div id="app">
@@ -103,6 +88,23 @@
 </div>
 
 <!-- Scripts -->
+<script src="https://js.pusher.com/4.1/pusher.min.js"></script>
 <script src="/js/app.js"></script>
+
+<script>
+
+    // Enable pusher logging - don't include this in production
+    Pusher.logToConsole = true;
+
+    var pusher = new Pusher("680cdba93f590707a3fa", {
+        cluster: 'ap1',
+        encrypted: true
+    });
+
+    var channel = pusher.subscribe('my-channels');
+    channel.bind('my-event', function (data) {
+        alert(data.message);
+    });
+</script>
 </body>
 </html>
