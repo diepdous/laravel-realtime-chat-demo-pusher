@@ -45,8 +45,6 @@
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
                 <!-- Left Side Of Navbar -->
                 <ul class="nav navbar-nav">
-                    &nbsp;<li><a href="{{ route('room') }}">Room</a></li>
-                    &nbsp;<li><a href="{{ route('massages') }}">Massages</a></li>
                 </ul>
 
                 <!-- Right Side Of Navbar -->
@@ -87,8 +85,6 @@
 </div>
 
 <!-- Scripts -->
-
-
 
 <script src="/js/app.js"></script>
 @yield("js")

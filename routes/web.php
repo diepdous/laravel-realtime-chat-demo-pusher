@@ -22,19 +22,24 @@ Route::get('/test', function () {
 })->name("test")->middleware('auth');
 
 Route::get('/messages', function () {
-    return App\Message::with('user')->get();
+    $room_id = request()->get('room_id');
+
+    return App\Message::with('user')->where('room_id',$room_id)->get();
 })->name("massages")->middleware('auth');
 
 Route::post('/messages', function () {
     // Store the new message
     $user = Auth::user();
-
+//    dd(request()->get('room_id'));
     $message = $user->messages()->create([
-        'message' => request()->get('message')
+        'message' => request()->get('message'),
+        'room_id' => request()->get('room_id')
     ]);
 
+    $room = $message->room()->where('id',request()->get('room_id'))->first();
+
     // Announce that a new message has been posted
-    broadcast(new MessagePosted($message, $user))->toOthers();
+    broadcast(new MessagePosted($message, $user, $room))->toOthers();
 
     return ['status' => 'OK'];
 })->middleware('auth');

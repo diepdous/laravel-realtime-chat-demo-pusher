@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use DB;
 
 class ChatController extends Controller
 {
@@ -11,6 +12,8 @@ class ChatController extends Controller
         $this->middleware('auth');
     }
     public function getIndex($id){
-        return view('chat', ['id'=>$id]);
+        $room = DB::table('rooms')->where('id', $id)->first();
+        if(!isset($room->id)) $room = null;
+        return view('chat', ['room'=>$room]);
     }
 }

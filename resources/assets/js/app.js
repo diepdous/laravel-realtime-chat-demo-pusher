@@ -36,11 +36,13 @@ const app = new Vue({
         }
     },
     created() {
-        axios.get('/messages').then(response => {
+        var room_id = $('#room_id').text();
+        console.log(room_id);
+        axios.get('/messages?room_id='+room_id).then(response => {
             this.messages = response.data;
         });
 
-        Echo.join('chatroom')
+        Echo.join('room_'+room_id)
             .here((users) => {
                 this.usersInRoom = users;
             })

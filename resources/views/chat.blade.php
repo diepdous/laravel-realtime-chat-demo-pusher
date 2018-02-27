@@ -6,7 +6,7 @@
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        Chatroom
+                        Chatroom: Room <span id="room_id">{{ $room->id }}</span>
                         <span class="badge pull-right">@{{ usersInRoom.length }}</span>
                     </div>
 
@@ -29,7 +29,7 @@
             encrypted: true
         });
 
-        var channel = pusher.subscribe('room_{{ $id }}');
+        var channel = pusher.subscribe('room_{{ $room->id }}');
         channel.bind('my-event', function (data) {
             alert(data.message);
         });

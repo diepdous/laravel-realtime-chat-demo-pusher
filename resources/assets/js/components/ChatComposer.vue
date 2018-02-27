@@ -16,6 +16,7 @@ export default {
         sendMessage() {
             this.$emit('messagesent', {
                 message: this.messageText,
+                room_id: $('#room_id').text(),
                 user: {
                     name: $('.navbar-right .dropdown-toggle').text()
                 }
