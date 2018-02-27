@@ -17,10 +17,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/chat', function () {
-    return view('chat');
-})->name("chat")->middleware('auth');
-
 Route::get('/test', function () {
     return view('test');
 })->name("test")->middleware('auth');
@@ -46,3 +42,7 @@ Route::post('/messages', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index');
+Route::get('/room','RoomController@getIndex')->name('room');
+Route::get('/room/add', 'RoomController@addRoom')->name('add_room_get');
+Route::post('/room/add', 'RoomController@addRoomPost')->name('add_room_post');
+Route::get('/room/chat/{id}','ChatController@getIndex')->name('chat_room');

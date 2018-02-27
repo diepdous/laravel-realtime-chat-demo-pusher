@@ -19,26 +19,7 @@
             'csrfToken' => csrf_token(),
         ]) !!};
     </script>
-<<<<<<< HEAD
 
-=======
-    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
-    <script>
-
-        // Enable pusher logging - don't include this in production
-        Pusher.logToConsole = true;
-
-        var pusher = new Pusher('f5f8045ab09bc508496e', {
-            cluster: 'ap1',
-            encrypted: true
-        });
-
-        var channel = pusher.subscribe('my-channels');
-        channel.bind('my-event', function(data) {
-            alert(data.message);
-        });
-    </script>
->>>>>>> 03f1065ce41467dd38c438e6cd2b3e5f9928bd5e
 </head>
 <body>
 <div id="app">
@@ -64,9 +45,8 @@
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
                 <!-- Left Side Of Navbar -->
                 <ul class="nav navbar-nav">
-                    &nbsp;<li><a href="{{ route('chat') }}">Chat</a></li>
+                    &nbsp;<li><a href="{{ route('room') }}">Room</a></li>
                     &nbsp;<li><a href="{{ route('massages') }}">Massages</a></li>
-                     <li><a href="{{ route('test') }}">Test</a></li>
                 </ul>
 
                 <!-- Right Side Of Navbar -->
@@ -107,23 +87,10 @@
 </div>
 
 <!-- Scripts -->
-<script src="https://js.pusher.com/4.1/pusher.min.js"></script>
+
+
+
 <script src="/js/app.js"></script>
-
-<script>
-
-    // Enable pusher logging - don't include this in production
-    Pusher.logToConsole = true;
-
-    var pusher = new Pusher("680cdba93f590707a3fa", {
-        cluster: 'ap1',
-        encrypted: true
-    });
-
-    var channel = pusher.subscribe('my-channels');
-    channel.bind('my-event', function (data) {
-        alert(data.message);
-    });
-</script>
+@yield("js")
 </body>
 </html>
