@@ -23,8 +23,13 @@ Route::get('/test', function () {
 
 Route::get('/messages/{room_id}', function ($room_id) {
 
-    $message_size = App\Message::with('user')->where('room_id',$room_id)->count();
-    return App\Message::with('user')->where('room_id',$room_id)->get();
+    $count= App\Message::with('user')->where('room_id',$room_id)->count();
+
+    return App\Message::with('user')
+        ->where('room_id',$room_id)
+        ->limit(10)
+        ->offset($count -10)
+        ->get();
 })->name("massages")->middleware('auth');
 
 Route::post('/messages', function () {

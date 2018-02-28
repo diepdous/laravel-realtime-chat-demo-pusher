@@ -18,8 +18,12 @@ class ChatController extends Controller
 
     public function getIndex($id)
     {
+
+
         $room = DB::table('rooms')->where('id', $id)->first();
-        if (!isset($room->id)) $room = null;
+        if (!isset($room->id)) {
+
+        };
         return view('chat', ['room' => $room]);
     }
 

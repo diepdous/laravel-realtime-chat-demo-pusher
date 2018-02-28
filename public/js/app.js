@@ -1404,9 +1404,9 @@ __webpack_require__(14);
  */
 
 Vue.component('example', __webpack_require__(43));
+Vue.component('chat-composer', __webpack_require__(57));
 Vue.component('chat-message', __webpack_require__(46));
 Vue.component('chat-log', __webpack_require__(52));
-Vue.component('chat-composer', __webpack_require__(57));
 
 var app = new Vue({
     el: '#app',
