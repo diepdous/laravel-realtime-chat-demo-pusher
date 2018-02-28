@@ -13,13 +13,31 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class DeleteMessage
+class DeleteMessage implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    /**
+     * Message
+     *
+     * @var Message
+     */
     public $message;
+
+    /**
+     * User
+     *
+     * @var User
+     */
     public $user;
+
+    /**
+     * Room
+     *
+     * @var Room
+     */
     public $room;
+
     /**
      * Create a new event instance.
      *
@@ -37,10 +55,10 @@ class DeleteMessage
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return \Illuminate\Broadcasting\Channel|array
+     * @return Channel|array
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('room_'.$this->room->id);
+        return new PresenceChannel('room_'.$this->room->id);
     }
 }
