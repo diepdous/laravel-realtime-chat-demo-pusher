@@ -16,21 +16,6 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 class DeleteMessage implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-
-    /**
-     * Message
-     *
-     * @var Message
-     */
-    public $message;
-
-    /**
-     * User
-     *
-     * @var User
-     */
-    public $user;
-
     /**
      * Room
      *
@@ -43,12 +28,8 @@ class DeleteMessage implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct(Message $message, User $user, Room $room)
+    public function __construct(Room $room)
     {
-        $this->message = $message;
-
-        $this->user = $user;
-
         $this->room = $room;
     }
 

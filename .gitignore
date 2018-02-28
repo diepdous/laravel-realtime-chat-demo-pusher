@@ -6,3 +6,4 @@ Homestead.yaml
 .env.dusk.*
 npm-debug.log
 .idea
+.env

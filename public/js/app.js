@@ -1434,8 +1434,7 @@ var app = new Vue({
 
             var room_id = $('#room_id').text();
             var id = message.id;
-            console.log("remove begin");
-            axios.get('/message/delete/' + id).then(function (response) {
+            axios.get('/message/delete/' + room_id + "/" + id).then(function (response) {
                 axios.get('/messages/' + room_id).then(function (response) {
                     _this2.messages = response.data;
                 });

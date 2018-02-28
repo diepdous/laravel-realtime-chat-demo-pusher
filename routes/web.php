@@ -30,12 +30,10 @@ Route::get('/messages/{room_id}', function ($room_id) {
 Route::post('/messages', function () {
     // Store the new message
     $user = Auth::user();
-//    dd(request()->get('room_id'));
     $message = $user->messages()->create([
         'message' => request()->get('message'),
         'room_id' => request()->get('room_id')
     ]);
-
     $room = $message->room()->where('id',request()->get('room_id'))->first();
 
     // Announce that a new message has been posted
@@ -51,4 +49,4 @@ Route::get('/room','RoomController@getIndex')->name('room');
 Route::get('/room/add', 'RoomController@addRoom')->name('add_room_get');
 Route::post('/room/add', 'RoomController@addRoomPost')->name('add_room_post');
 Route::get('/room/chat/{id}','ChatController@getIndex')->name('chat_room');
-Route::get('/message/delete/{id}','ChatController@removeMessage')->name('removeMessage');
+Route::get('/message/delete/{room_id}/{id}','ChatController@removeMessage')->name('removeMessage');

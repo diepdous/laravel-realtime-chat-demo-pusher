@@ -39,8 +39,7 @@ const app = new Vue({
         removeMessage(message) {
             var room_id = $('#room_id').text();
             var id = message.id;
-            console.log("remove begin");
-            axios.get('/message/delete/' + id).then(response => {
+            axios.get('/message/delete/' + room_id+"/"+id).then(response => {
                 axios.get('/messages/' + room_id).then(response => {
                     this.messages = response.data;
                 });
