@@ -41,6 +41,6 @@ class DeleteMessage
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('room'.$this->room->id);
+        return new PrivateChannel('room_'.$this->room->id);
     }
 }
