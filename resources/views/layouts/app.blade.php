@@ -19,7 +19,7 @@
             'csrfToken' => csrf_token(),
         ]) !!};
     </script>
-
+    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
 </head>
 <body>
 <div id="app">
@@ -57,7 +57,7 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                                aria-expanded="false">
-                                {{ Auth::user()->name }} <span class="caret"></span>
+                                {{ Auth::user()->name }} <span id="user_id" style="display: none">{!! Auth::user()->id !!} </span> <span class="caret"></span>
                             </a>
 
                             <ul class="dropdown-menu" role="menu">

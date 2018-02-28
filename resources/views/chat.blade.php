@@ -6,11 +6,12 @@
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        Chatroom: Room <span id="room_id">{{ $room->id }}</span>
+                        Chatroom: {!! $room->name !!}
+                        <span id="room_id" style="display: none">{{ $room->id }}</span>
                         <span class="badge pull-right">@{{ usersInRoom.length }}</span>
                     </div>
 
-                    <chat-log :messages="messages"></chat-log>
+                    <chat-log :messages="messages"  v-on:message-deleted="removeMessage"></chat-log>
                     <chat-composer v-on:messagesent="addMessage"></chat-composer>
                 </div>
             </div>
@@ -18,7 +19,7 @@
     </div>
 @endsection
 @section('js')
-    <script src="https://js.pusher.com/4.1/pusher.min.js"></script>
+
     <script>
 
         // Enable pusher logging - don't include this in production

@@ -1,4 +1,3 @@
-
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -30,19 +29,32 @@ const app = new Vue({
             this.messages.push(message);
 
             // Persist to the database etc
+            var room_id = $('#room_id').text();
             axios.post('/messages', message).then(response => {
-                // Do whatever;
+                axios.get('/messages/' + room_id).then(response => {
+                    this.messages = response.data;
+                });
             })
+        },
+        removeMessage(message) {
+            var room_id = $('#room_id').text();
+            var id = message.id;
+            console.log("remove begin");
+            axios.get('/message/delete/' + id).then(response => {
+                axios.get('/messages/' + room_id).then(response => {
+                    this.messages = response.data;
+                });
+            });
         }
     },
     created() {
         var room_id = $('#room_id').text();
         console.log(room_id);
-        axios.get('/messages?room_id='+room_id).then(response => {
+        axios.get('/messages/' + room_id).then(response => {
             this.messages = response.data;
         });
 
-        Echo.join('room_'+room_id)
+        Echo.join('room_' + room_id)
             .here((users) => {
                 this.usersInRoom = users;
             })
@@ -57,6 +69,19 @@ const app = new Vue({
                     message: e.message.message,
                     user: e.user
                 });
-            });
+
+                axios.get('/messages/' + room_id).then(response => {
+                    this.messages = response.data;
+                });
+            })
+            .listen('DeleteMessage', (e) => {
+                var id = message.id;
+
+                //delete mess in dtb
+                axios.get('/messages/' + room_id).then(response => {
+                    this.messages = response.data;
+                });
+            })
+        ;
     }
 });

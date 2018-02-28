@@ -21,9 +21,9 @@ Route::get('/test', function () {
     return view('test');
 })->name("test")->middleware('auth');
 
-Route::get('/messages', function () {
-    $room_id = request()->get('room_id');
+Route::get('/messages/{room_id}', function ($room_id) {
 
+    $message_size = App\Message::with('user')->where('room_id',$room_id)->count();
     return App\Message::with('user')->where('room_id',$room_id)->get();
 })->name("massages")->middleware('auth');
 
@@ -51,3 +51,4 @@ Route::get('/room','RoomController@getIndex')->name('room');
 Route::get('/room/add', 'RoomController@addRoom')->name('add_room_get');
 Route::post('/room/add', 'RoomController@addRoomPost')->name('add_room_post');
 Route::get('/room/chat/{id}','ChatController@getIndex')->name('chat_room');
+Route::get('/message/delete/{id}','ChatController@removeMessage')->name('removeMessage');
