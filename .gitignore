@@ -13,3 +13,4 @@ public/hot
 .env.dusk.*
 public/mix-manifest.json
 npm-debug.log
+.idea
