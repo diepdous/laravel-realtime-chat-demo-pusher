@@ -1,11 +1,8 @@
 /node_modules
-/public/storage
-/storage/*.key
 /vendor
 /.idea
 Homestead.json
 Homestead.yaml
 .env.dusk.*
-public/mix-manifest.json
 npm-debug.log
 .idea
