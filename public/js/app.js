@@ -1421,7 +1421,9 @@ var app = new Vue({
 
             console.log(data);
             axios.get('/messages-more/' + data.room_id + "/" + data.page).then(function (response) {
-                if (_this.messages.length < response.data) {
+                console.log(_this.messages.length);
+                console.log(response.data.length);
+                if (_this.messages.length - 1 < response.data.length) {
                     _this.messages = response.data;
                     $('#page').text(++data.page);
                     $('#load_status').text("0");
