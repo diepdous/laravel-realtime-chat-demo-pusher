@@ -21,7 +21,7 @@
                 $('#'+this.$el.id).find('.config-message').hide();
             },
             deleteMessage() {
-                this.$parent.$emit('message-deleted',{
+                this.$parent.$emit('messagedeleted',{
                     id: this.$el.id,
                 });
             }

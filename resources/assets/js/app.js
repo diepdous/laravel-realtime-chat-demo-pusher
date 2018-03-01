@@ -16,16 +16,26 @@ Vue.component('example', require('./components/Example.vue'));
 Vue.component('chat-composer', require('./components/ChatComposer.vue'));
 Vue.component('chat-message', require('./components/ChatMessage.vue'));
 Vue.component('chat-log', require('./components/ChatLog.vue'));
+Vue.component('load-more', require('./components/LoadMore.vue'));
 
 
 const app = new Vue({
-    el: '#app',
-    data: {
-        messages: [],
-        usersInRoom: []
-    },
-    methods: {
-        addMessage(message) {
+        el: '#app',
+        data: {
+            messages: [],
+            usersInRoom: []
+        },
+        methods: {
+            loadingMore(data) {
+                console.log(data);
+                axios.get('/messages-more/' + data.room_id+"/"+data.page).then(response => {
+                    this.messages = response.data;
+                    $('#page').text(++data.page);
+                    $('#load_status').text("0");
+                });
+            },
+
+            addMessage(message) {
             // Add to existing messages
             this.messages.push(message);
 
@@ -34,54 +44,67 @@ const app = new Vue({
             axios.post('/messages', message).then(response => {
                 axios.get('/messages/' + room_id).then(response => {
                     this.messages = response.data;
+                    $(".chat-log").animate({scrollTop: $('.chat-log').prop("scrollHeight")}, 1000);
+
                 });
             })
         },
         removeMessage(message) {
             var room_id = $('#room_id').text();
             var id = message.id;
-            axios.get('/message/delete/' + room_id+"/"+id).then(response => {
+            axios.get('/message/delete/' + room_id + "/" + id).then(response => {
                 axios.get('/messages/' + room_id).then(response => {
                     this.messages = response.data;
                 });
             });
+        },
+        loadMore() {
+            console.log("running loadmore function ok");
         }
     },
-    created() {
-        var room_id = $('#room_id').text();
-        console.log(room_id);
-        axios.get('/messages/' + room_id).then(response => {
-            this.messages = response.data;
-        });
+    created()
+{
+    var room_id = $('#room_id').text();
+    console.log(room_id);
+    axios.get('/messages/' + room_id).then(response => {
+        this.messages = response.data;
 
-        Echo.join('room_' + room_id)
-            .here((users) => {
-                this.usersInRoom = users;
-            })
-            .joining((user) => {
-                this.usersInRoom.push(user);
-            })
-            .leaving((user) => {
-                this.usersInRoom = this.usersInRoom.filter(u => u != user)
-            })
-            .listen('MessagePosted', (e) => {
-                this.messages.push({
-                    message: e.message.message,
-                    user: e.user
-                });
+        $(".chat-log").animate({
+            scrollTop: 2 * ($('.chat-log').offset().top + $('.chat-log').outerHeight(true))
+        }, 1000);
+    });
 
-                axios.get('/messages/' + room_id).then(response => {
-                    this.messages = response.data;
-                });
-            })
-            .listen('DeleteMessage', (e) => {
-                var id = message.id;
 
-                //delete mess in dtb
-                axios.get('/messages/' + room_id).then(response => {
-                    this.messages = response.data;
-                });
-            })
-        ;
-    }
-});
+    Echo.join('room_' + room_id)
+        .here((users) => {
+            this.usersInRoom = users;
+        })
+        .joining((user) => {
+            this.usersInRoom.push(user);
+        })
+        .leaving((user) => {
+            this.usersInRoom = this.usersInRoom.filter(u => u != user)
+        })
+        .listen('MessagePosted', (e) => {
+            this.messages.push({
+                message: e.message.message,
+                user: e.user
+            });
+
+            axios.get('/messages/' + room_id).then(response => {
+                $('.chat-log').scrollTop($('.chat-log').scrollHeight);
+                this.messages = response.data;
+            });
+        })
+        .listen('DeleteMessage', (e) => {
+            var id = message.id;
+
+            //delete mess in dtb
+            axios.get('/messages/' + room_id).then(response => {
+                this.messages = response.data;
+            });
+        })
+    ;
+}
+})
+;

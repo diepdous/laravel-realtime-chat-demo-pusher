@@ -1404,9 +1404,10 @@ __webpack_require__(14);
  */
 
 Vue.component('example', __webpack_require__(43));
-Vue.component('chat-composer', __webpack_require__(57));
-Vue.component('chat-message', __webpack_require__(46));
-Vue.component('chat-log', __webpack_require__(52));
+Vue.component('chat-composer', __webpack_require__(46));
+Vue.component('chat-message', __webpack_require__(52));
+Vue.component('chat-log', __webpack_require__(57));
+Vue.component('load-more', __webpack_require__(72));
 
 var app = new Vue({
     el: '#app',
@@ -1415,8 +1416,18 @@ var app = new Vue({
         usersInRoom: []
     },
     methods: {
-        addMessage: function addMessage(message) {
+        loadingMore: function loadingMore(data) {
             var _this = this;
+
+            console.log(data);
+            axios.get('/messages-more/' + data.room_id + "/" + data.page).then(function (response) {
+                _this.messages = response.data;
+                $('#page').text(++data.page);
+                $('#load_status').text("0");
+            });
+        },
+        addMessage: function addMessage(message) {
+            var _this2 = this;
 
             // Add to existing messages
             this.messages.push(message);
@@ -1425,54 +1436,63 @@ var app = new Vue({
             var room_id = $('#room_id').text();
             axios.post('/messages', message).then(function (response) {
                 axios.get('/messages/' + room_id).then(function (response) {
-                    _this.messages = response.data;
+                    _this2.messages = response.data;
+                    $(".chat-log").animate({ scrollTop: $('.chat-log').prop("scrollHeight") }, 1000);
                 });
             });
         },
         removeMessage: function removeMessage(message) {
-            var _this2 = this;
+            var _this3 = this;
 
             var room_id = $('#room_id').text();
             var id = message.id;
             axios.get('/message/delete/' + room_id + "/" + id).then(function (response) {
                 axios.get('/messages/' + room_id).then(function (response) {
-                    _this2.messages = response.data;
+                    _this3.messages = response.data;
                 });
             });
+        },
+        loadMore: function loadMore() {
+            console.log("running loadmore function ok");
         }
     },
     created: function created() {
-        var _this3 = this;
+        var _this4 = this;
 
         var room_id = $('#room_id').text();
         console.log(room_id);
         axios.get('/messages/' + room_id).then(function (response) {
-            _this3.messages = response.data;
+            _this4.messages = response.data;
+
+            $(".chat-log").animate({
+                scrollTop: 2 * ($('.chat-log').offset().top + $('.chat-log').outerHeight(true))
+            }, 1000);
         });
 
         Echo.join('room_' + room_id).here(function (users) {
-            _this3.usersInRoom = users;
+            _this4.usersInRoom = users;
         }).joining(function (user) {
-            _this3.usersInRoom.push(user);
+            _this4.usersInRoom.push(user);
         }).leaving(function (user) {
-            _this3.usersInRoom = _this3.usersInRoom.filter(function (u) {
+            _this4.usersInRoom = _this4.usersInRoom.filter(function (u) {
                 return u != user;
             });
         }).listen('MessagePosted', function (e) {
-            _this3.messages.push({
+            _this4.messages.push({
                 message: e.message.message,
                 user: e.user
             });
 
             axios.get('/messages/' + room_id).then(function (response) {
-                _this3.messages = response.data;
+                $('.chat-log').scrollTop($('.chat-log').scrollHeight);
+                _this4.messages = response.data;
             });
         }).listen('DeleteMessage', function (e) {
             var id = message.id;
 
             //delete mess in dtb
             axios.get('/messages/' + room_id).then(function (response) {
-                _this3.messages = response.data;
+                _this4.messages = response.data;
             });
         });
     }
@@ -48508,7 +48528,7 @@ var Component = normalizeComponent(
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "resources\\assets\\js\\components\\ChatMessage.vue"
+Component.options.__file = "resources\\assets\\js\\components\\ChatComposer.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -48517,9 +48537,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-66b97068", Component.options)
+    hotAPI.createRecord("data-v-aab418e2", Component.options)
   } else {
-    hotAPI.reload("data-v-66b97068", Component.options)
+    hotAPI.reload("data-v-aab418e2", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -48540,13 +48560,13 @@ var content = __webpack_require__(48);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(5)("0c763d6e", content, false, {});
+var update = __webpack_require__(5)("1991433a", content, false, {});
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
  if(!content.locals) {
-   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-66b97068\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ChatMessage.vue", function() {
-     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-66b97068\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ChatMessage.vue");
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-aab418e2\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ChatComposer.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-aab418e2\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ChatComposer.vue");
      if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
      update(newContent);
    });
@@ -48564,7 +48584,7 @@ exports = module.exports = __webpack_require__(4)(false);
 
 
 // module
-exports.push([module.i, "\n.chat-message {\n    padding: 1rem;\n    position: relative;\n}\n.chat-message:hover .config-message{\n    /*display: block;*/\n}\n.config-message {\n    position: absolute;\n    top: 0;\n    right: 0;\n    display: none;\n}\n.btn-config {\n    background: transparent;\n    border: transparent;\n    border-radius:0 0 0 10px ;\n}\n.btn-config:hover , .btn-config:focus{\n    background: rgba(0,0,0,0.1);\n}\n.chat-message > p {\n    margin-bottom: .5rem;\n}\n", ""]);
+exports.push([module.i, "\n.chat-composer {\r\n    display: -webkit-box;\r\n    display: -ms-flexbox;\r\n    display: flex;\n}\n.chat-composer input {\r\n    -webkit-box-flex: 1;\r\n        -ms-flex: 1 auto;\r\n            flex: 1 auto;\r\n    padding: .5rem 1rem;\n}\n.chat-composer button {\r\n    border-radius: 0;\n}\r\n", ""]);
 
 // exports
 
@@ -48615,331 +48635,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['message'],
-    methods: {
-        mouseOver: function mouseOver() {
-            var user_id = $('#user_id').text();
-            if (user_id == 1 || this.message.user.id == user_id) $('#' + this.$el.id).find('.config-message').show();
-        },
-        mouseOut: function mouseOut() {
-            var user_id = $('#user_id').text();
-            $('#' + this.$el.id).find('.config-message').hide();
-        },
-        deleteMessage: function deleteMessage() {
-            this.$parent.$emit('message-deleted', {
-                id: this.$el.id
-            });
-        }
-    }
-});
-
-/***/ }),
-/* 51 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    _vm._g(
-      { staticClass: "chat-message", attrs: { id: _vm.message.id } },
-      { mouseover: _vm.mouseOver, mouseout: _vm.mouseOut }
-    ),
-    [
-      _c("div", { staticClass: "config-message" }, [
-        _c(
-          "button",
-          { staticClass: "btn btn-config", on: { click: _vm.deleteMessage } },
-          [_vm._v("X")]
-        )
-      ]),
-      _vm._v(" "),
-      _c("p", [_vm._v(_vm._s(_vm.message.message))]),
-      _vm._v(" "),
-      _c("small", [_vm._v(_vm._s(_vm.message.user.name))])
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-66b97068", module.exports)
-  }
-}
-
-/***/ }),
-/* 52 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-function injectStyle (ssrContext) {
-  if (disposed) return
-  __webpack_require__(53)
-}
-var normalizeComponent = __webpack_require__(2)
-/* script */
-var __vue_script__ = __webpack_require__(55)
-/* template */
-var __vue_template__ = __webpack_require__(56)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = injectStyle
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources\\assets\\js\\components\\ChatLog.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-bba78cb6", Component.options)
-  } else {
-    hotAPI.reload("data-v-bba78cb6", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 53 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(54);
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var update = __webpack_require__(5)("b1ecfd28", content, false, {});
-// Hot Module Replacement
-if(false) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-bba78cb6\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ChatLog.vue", function() {
-     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-bba78cb6\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ChatLog.vue");
-     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 54 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(4)(false);
-// imports
-
-
-// module
-exports.push([module.i, "\n.chat-log .chat-message:nth-child(even) {\r\n    background-color: #ccc;\n}\n.empty {\r\n    padding: 1rem;\r\n    text-align: center;\n}\r\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 55 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['messages']
-});
-
-/***/ }),
-/* 56 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "chat-log" },
-    [
-      _vm._l(_vm.messages, function(message) {
-        return _c("chat-message", {
-          key: message.id,
-          attrs: { message: message }
-        })
-      }),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: _vm.messages.length === 0,
-              expression: "messages.length === 0"
-            }
-          ],
-          staticClass: "empty"
-        },
-        [_vm._v("\n        Nothing here yet!\n    ")]
-      )
-    ],
-    2
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-module.exports = { render: render, staticRenderFns: staticRenderFns }
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-bba78cb6", module.exports)
-  }
-}
-
-/***/ }),
-/* 57 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var disposed = false
-function injectStyle (ssrContext) {
-  if (disposed) return
-  __webpack_require__(58)
-}
-var normalizeComponent = __webpack_require__(2)
-/* script */
-var __vue_script__ = __webpack_require__(60)
-/* template */
-var __vue_template__ = __webpack_require__(61)
-/* template functional */
-var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = injectStyle
-/* scopeId */
-var __vue_scopeId__ = null
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __vue_script__,
-  __vue_template__,
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "resources\\assets\\js\\components\\ChatComposer.vue"
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-aab418e2", Component.options)
-  } else {
-    hotAPI.reload("data-v-aab418e2", Component.options)
-  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 58 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(59);
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var update = __webpack_require__(5)("1991433a", content, false, {});
-// Hot Module Replacement
-if(false) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-aab418e2\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ChatComposer.vue", function() {
-     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-aab418e2\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ChatComposer.vue");
-     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 59 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(4)(false);
-// imports
-
-
-// module
-exports.push([module.i, "\n.chat-composer {\r\n    display: -webkit-box;\r\n    display: -ms-flexbox;\r\n    display: flex;\n}\n.chat-composer input {\r\n    -webkit-box-flex: 1;\r\n        -ms-flex: 1 auto;\r\n            flex: 1 auto;\r\n    padding: .5rem 1rem;\n}\n.chat-composer button {\r\n    border-radius: 0;\n}\r\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 60 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -48963,7 +48658,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 61 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -49023,10 +48718,523 @@ if (false) {
 }
 
 /***/ }),
+/* 52 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(53)
+}
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(55)
+/* template */
+var __vue_template__ = __webpack_require__(56)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\ChatMessage.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-66b97068", Component.options)
+  } else {
+    hotAPI.reload("data-v-66b97068", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 53 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(54);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(5)("0c763d6e", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-66b97068\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ChatMessage.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-66b97068\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ChatMessage.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 54 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(4)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.chat-message {\n    padding: 1rem;\n    position: relative;\n}\n.chat-message:hover .config-message{\n    /*display: block;*/\n}\n.config-message {\n    position: absolute;\n    top: 0;\n    right: 0;\n    display: none;\n}\n.btn-config {\n    background: transparent;\n    border: transparent;\n    border-radius:0 0 0 10px ;\n}\n.btn-config:hover , .btn-config:focus{\n    background: rgba(0,0,0,0.1);\n}\n.chat-message > p {\n    margin-bottom: .5rem;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 55 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['message'],
+    methods: {
+        mouseOver: function mouseOver() {
+            var user_id = $('#user_id').text();
+            if (user_id == 1 || this.message.user.id == user_id) $('#' + this.$el.id).find('.config-message').show();
+        },
+        mouseOut: function mouseOut() {
+            var user_id = $('#user_id').text();
+            $('#' + this.$el.id).find('.config-message').hide();
+        },
+        deleteMessage: function deleteMessage() {
+            this.$parent.$emit('messagedeleted', {
+                id: this.$el.id
+            });
+        }
+    }
+});
+
+/***/ }),
+/* 56 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    _vm._g(
+      { staticClass: "chat-message", attrs: { id: _vm.message.id } },
+      { mouseover: _vm.mouseOver, mouseout: _vm.mouseOut }
+    ),
+    [
+      _c("div", { staticClass: "config-message" }, [
+        _c(
+          "button",
+          { staticClass: "btn btn-config", on: { click: _vm.deleteMessage } },
+          [_vm._v("X")]
+        )
+      ]),
+      _vm._v(" "),
+      _c("p", [_vm._v(_vm._s(_vm.message.message))]),
+      _vm._v(" "),
+      _c("small", [_vm._v(_vm._s(_vm.message.user.name))])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-66b97068", module.exports)
+  }
+}
+
+/***/ }),
+/* 57 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(58)
+}
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(60)
+/* template */
+var __vue_template__ = __webpack_require__(61)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\ChatLog.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-bba78cb6", Component.options)
+  } else {
+    hotAPI.reload("data-v-bba78cb6", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 58 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(59);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(5)("b1ecfd28", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-bba78cb6\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ChatLog.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-bba78cb6\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ChatLog.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 59 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(4)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.chat-log{\n        max-height: 400px;\n        overflow-y: hidden;\n        overflow-x: hidden;\n}\n    /*\n     *  STYLE 7\n     */\n#style_7::-webkit-scrollbar-track\n    {\n        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);\n        background-color: #F5F5F5;\n        border-radius: 10px;\n}\n#style_7::-webkit-scrollbar\n    {\n        width: 5px;\n        background-color: #F5F5F5;\n        margin-right: -5px;\n}\n#style_7::-webkit-scrollbar-thumb\n    {\n        border-radius: 10px;\n        background-image: -webkit-gradient(linear,\n        left bottom,\n        left top,\n        color-stop(0.44, rgb(122,153,217)),\n        color-stop(0.72, rgb(73,125,189)),\n        color-stop(0.86, rgb(28,58,148)));\n}\n.chat-log:hover{\n        overflow-y: scroll;\n}\n.chat-log .chat-message:nth-child(even) {\n    background-color: #ccc;\n}\n.empty {\n    padding: 1rem;\n    text-align: center;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 60 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    props: ['messages', 'page'],
+    methods: {
+        handleScroll: function handleScroll(event) {
+            var _scrollTop;
+            var load = this;
+            $("#style_7").scroll(function () {
+                _scrollTop = $('#style_7').scrollTop();
+                var room_id = $('#room_id').text();
+                var page = parseInt($('#page').text());
+                var load_status = $('#load_status').text();
+                // var load_status = 0;
+                if (_scrollTop == 0 && load_status == 0) {
+                    $('#load_status').text("1");
+                    console.log(" đang ở trang số " + page);
+                    console.log(load);
+                    load.$emit('loadingmore', {
+                        position: load.messages[load.messages.length - 1].id,
+                        page: page,
+                        room_id: room_id
+                    });
+                }
+            });
+        }
+    },
+    mounted: function mounted() {
+        document.getElementById('style_7').addEventListener('scroll', this.handleScroll);
+    },
+    destroyed: function destroyed() {
+        document.getElementById('style_7').removeEventListener('scroll', this.handleScroll);
+    }
+});
+
+/***/ }),
+/* 61 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "chat-log", attrs: { id: "style_7" } },
+    [
+      _c("load-more", { attrs: { id: "load-more", page: _vm.page } }),
+      _vm._v(" "),
+      _vm._l(_vm.messages, function(message) {
+        return _c("chat-message", {
+          key: message.id,
+          attrs: { message: message }
+        })
+      }),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.messages.length === 0,
+              expression: "messages.length === 0"
+            }
+          ],
+          staticClass: "empty"
+        },
+        [_vm._v("\n        Nothing here yet!\n    ")]
+      )
+    ],
+    2
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-bba78cb6", module.exports)
+  }
+}
+
+/***/ }),
 /* 62 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 63 */,
+/* 64 */,
+/* 65 */,
+/* 66 */,
+/* 67 */,
+/* 68 */,
+/* 69 */,
+/* 70 */,
+/* 71 */,
+/* 72 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(77)
+}
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(75)
+/* template */
+var __vue_template__ = __webpack_require__(79)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\LoadMore.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-34209252", Component.options)
+  } else {
+    hotAPI.reload("data-v-34209252", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 73 */,
+/* 74 */,
+/* 75 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: "load-more"
+});
+
+/***/ }),
+/* 76 */,
+/* 77 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(78);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(5)("00858290", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-34209252\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./LoadMore.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-34209252\",\"scoped\":false,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./LoadMore.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 78 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(4)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.lazy-load{\n    text-align: center;\n}\n#page{\n    display: none;\n}\n.loading-image{\n    max-width: 20px;\n}\n#load_status{\n    display: none;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 79 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "lazy-load" }, [
+      _c("img", {
+        staticClass: "loading-image",
+        attrs: { src: "/images/loading.gif", alt: "" }
+      }),
+      _vm._v(" "),
+      _c("span", { attrs: { id: "page" } }, [_vm._v("2")]),
+      _c("span", { attrs: { id: "load_status" } }, [_vm._v("0")])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-34209252", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

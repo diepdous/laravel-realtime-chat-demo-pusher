@@ -11,7 +11,7 @@
                         <span class="badge pull-right">@{{ usersInRoom.length }}</span>
                     </div>
 
-                    <chat-log :messages="messages"  v-on:message-deleted="removeMessage"></chat-log>
+                    <chat-log :messages="messages" v-on="{ messagedeleted: removeMessage, loadingmore: loadingMore} "></chat-log>
                     <chat-composer v-on:messagesent="addMessage"></chat-composer>
                 </div>
             </div>
@@ -23,7 +23,7 @@
     <script>
 
         // Enable pusher logging - don't include this in production
-        Pusher.logToConsole = true;
+        Pusher.logToConsole = false;
 
         var pusher = new Pusher("f5f8045ab09bc508496e", {
             cluster: 'ap1',

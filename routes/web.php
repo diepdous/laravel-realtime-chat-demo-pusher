@@ -30,7 +30,18 @@ Route::get('/messages/{room_id}', function ($room_id) {
         ->limit(10)
         ->offset($count -10)
         ->get();
-})->name("massages")->middleware('auth');
+})->name("messages")->middleware('auth');
+
+Route::get('/messages-more/{room_id}/{page}', function ($room_id,$page) {
+
+    $count= App\Message::with('user')->where('room_id',$room_id)->count();
+
+    return App\Message::with('user')
+        ->where('room_id',$room_id)
+        ->limit(10*$page)
+        ->offset($count -10*$page)
+        ->get();
+})->name("messages-more")->middleware('auth');
 
 Route::post('/messages', function () {
     // Store the new message
