@@ -1421,9 +1421,11 @@ var app = new Vue({
 
             console.log(data);
             axios.get('/messages-more/' + data.room_id + "/" + data.page).then(function (response) {
-                _this.messages = response.data;
-                $('#page').text(++data.page);
-                $('#load_status').text("0");
+                if (_this.messages.length < response.data) {
+                    _this.messages = response.data;
+                    $('#page').text(++data.page);
+                    $('#load_status').text("0");
+                }
             });
         },
         addMessage: function addMessage(message) {
