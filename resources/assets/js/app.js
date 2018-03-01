@@ -34,6 +34,9 @@ const app = new Vue({
                         $('#page').text(++data.page);
                         $('#load_status').text("0");
                     }
+                    else{
+                        $('.lazy-load').hide();
+                    }
                 });
             },
 
